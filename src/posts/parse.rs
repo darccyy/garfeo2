@@ -25,7 +25,11 @@ pub fn parse_posts() -> Result<PostList> {
 
     for (index, folder) in folders.into_iter().enumerate() {
         let index = Index(index);
-        let version = *old_versions.get(&index.as_int()).unwrap_or(&0);
+
+        let version = old_versions
+            .get(&index.as_int())
+            .map(|version| *version + 1)
+            .unwrap_or(0);
 
         let post = parse_post(index, folder, version, &existing_titles, &existing_dates)
             .with_context(|| format!("For post [{}]", index))?;

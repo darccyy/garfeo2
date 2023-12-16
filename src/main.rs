@@ -12,11 +12,23 @@ fn main() {
     let routes = routes! [
         (/)
             => routes::at_index(&posts),
-        (/404)
-            => routes::at_404(&posts),
+        (/"plej-bonaj")
+            => routes::at_favorites(&posts),
+        (/"informejo")
+            => routes::at_about(&posts),
+        (/"instrukcio")
+            => routes::at_instructions(&posts),
+        (/"listo")
+            => routes::at_list(&posts),
+
         (/[post.get().index()])
             for post in posts
             => routes::at_post(post),
+        (/"lasta")
+            => routes::at_post(posts.last_ref()),
+
+        (/404)
+            => routes::at_404(&posts),
     ];
 
     ssg::quick_build(routes).expect("Failed to build");

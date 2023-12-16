@@ -47,6 +47,22 @@ impl<T> List<T> {
     pub fn last(&self) -> &T {
         self.items.last().expect("there should be a last post")
     }
+
+    pub fn first_ref(&self) -> ItemRef<T> {
+        let index = 0;
+        self.first();
+        ItemRef { index, list: self }
+    }
+    pub fn last_ref(&self) -> ItemRef<T> {
+        let index = self
+            .items
+            .len()
+            .checked_sub(1)
+            .expect("there should be a last post");
+        self.last();
+        ItemRef { index, list: self }
+    }
+
     pub fn list_ends(&self) -> ListEnds<T> {
         let first = self.first();
         let last = self.last();

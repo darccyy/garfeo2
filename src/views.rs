@@ -7,6 +7,8 @@ use crate::posts::PostRef;
 use super::posts::{transcript, PostList};
 use super::URL_ROOT;
 
+pub const STAR: &str = "⭐";
+
 pub fn use_base(
     title: &str,
     header: View,
@@ -65,7 +67,7 @@ fn top_header(posts: &PostList) -> View {
             }
 
             h2 ."actions" {
-                // HEAD { script { [include_str!("js/random.js")] } }
+                HEAD { script { [include_str!("js/random.js")] } }
                 a #"random" [title="Klaku por iri al iun bildstrio"] {
                     i { "Arbitra" }
                     span ."icon" { "⚄" }
@@ -113,8 +115,6 @@ pub fn list_item(post_ref: &PostRef) -> View {
 }
 
 pub fn post_title(post: &PostRef, italic: bool) -> View {
-    const STAR: &str = "⭐";
-
     let post = post.get();
 
     view! {
