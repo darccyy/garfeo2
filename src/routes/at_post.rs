@@ -52,7 +52,7 @@ pub fn at_post(post_ref: PostRef) -> Document {
             ]/
         }
 
-        p ."small gray" {
+        div ."small gray" {
             [:if post.version > 0 {
                 b { "Revizio:" }
                 ~ [post.version]
