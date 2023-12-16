@@ -16,6 +16,12 @@ pub struct Neighbors<'a, T> {
     pub next: Option<&'a T>,
 }
 
+#[derive(Debug)]
+pub struct ListEnds<'a, T> {
+    pub first: &'a T,
+    pub last: &'a T,
+}
+
 impl<'a, T> IntoIterator for &'a List<T> {
     type Item = ItemRef<'a, T>;
     type IntoIter = std::vec::IntoIter<ItemRef<'a, T>>;
@@ -33,6 +39,18 @@ impl<'a, T> IntoIterator for &'a List<T> {
 impl<T> List<T> {
     pub fn new(items: Vec<T>) -> Self {
         Self { items }
+    }
+
+    pub fn first(&self) -> &T {
+        self.items.first().expect("there should be a first post")
+    }
+    pub fn last(&self) -> &T {
+        self.items.last().expect("there should be a last post")
+    }
+    pub fn list_ends(&self) -> ListEnds<T> {
+        let first = self.first();
+        let last = self.last();
+        ListEnds { first, last }
     }
 }
 
@@ -57,5 +75,8 @@ impl<'a, T> ItemRef<'a, T> {
 
     pub fn index(&self) -> usize {
         self.index
+    }
+    pub fn list(&self) -> &List<T> {
+        self.list
     }
 }
