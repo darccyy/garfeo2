@@ -1,47 +1,26 @@
 use ibex::prelude::*;
 use ibex::{routes, ssg};
 
-const URL_ROOT: &str = "/ibex-template/";
+mod posts;
+mod routes;
+
+const URL_ROOT: &str = "/garfeo2/";
 
 fn main() {
+    let posts = posts::parse_posts().expect("Failed to parse posts");
+
     let routes = routes! [
-        (/)    => at_index(),
-        (/404) => at_404(),
+        (/)
+            => routes::at_index(&posts),
+        (/404)
+            => routes::at_404(),
+        (/[post.get().index()])
+            for post in posts
+            => routes::at_post(post),
     ];
 
     ssg::quick_build(routes).expect("Failed to build");
     println!("\x1b[34;1mBuilt successfully!\x1b[0m");
-}
-
-fn at_index() -> Document {
-    view! { @use_base []
-        center {
-            h1 { "My Ibex App" }
-            p {
-                "This app was made using"
-                ~ a [href="https://github.com/darccyy/ibex-template"] {
-                    "Ibex Template"
-                }
-            }
-            p { a [href=url!("not/a/real/path")] { "404 Example" } }
-            br/
-            img [
-                alt="Ibex logo",
-                src=url!("static/icon.png"),
-                width=300,
-            ]/
-        }
-    }
-    .into()
-}
-
-fn at_404() -> Document {
-    view! { @use_base []
-        center {
-            "404 - Not found"
-        }
-    }
-    .into()
 }
 
 fn use_base() -> View {
