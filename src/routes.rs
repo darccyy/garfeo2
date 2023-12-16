@@ -294,6 +294,7 @@ pub fn json_index(posts: &PostList) -> String {
     )
 }
 
+#[allow(clippy::format_in_format_args)]
 pub fn json_post(post_ref: PostRef) -> String {
     let post = post_ref.get();
     format!(

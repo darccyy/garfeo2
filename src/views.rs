@@ -155,7 +155,7 @@ pub fn post_transcript(transcript: &transcript::Transcript) -> View {
                                         p ."text" { code { [text] } }
                                     },
                                     transcript::Speaker::Character{ name, uncommon } => view! {
-                                        h4 { [:where let name = sentence_case(&name) {
+                                        h4 { [:where let name = sentence_case(name) {
                                             [:if *uncommon {
                                                 em { [name] }
                                             } else {
@@ -163,7 +163,7 @@ pub fn post_transcript(transcript: &transcript::Transcript) -> View {
                                             }]
                                         }] }
                                         p ."speech" {
-                                            [format_emphasis(&sentence_case(&text))]
+                                            [format_emphasis(&sentence_case(text))]
                                         }
                                     }
                                 }]
