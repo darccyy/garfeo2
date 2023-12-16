@@ -1,41 +1,28 @@
-# Ibex Template
+# Garfield Esperanto
 
-Simple template for an [Ibex](https://github.com/darccyy/ibex) SSG site.
+500+ *Garfield* comics translated to Esperanto.
 
-- [Live on GitHub Pages](https://darccyy.github.io/ibex-template)
+-   [See website live now!](https://darccyy.github.io/garfeo) (in Esperanto)
 
-# Usage
+Made with [Ibex](https://github.com/darccyy/ibex)
 
-```sh
-# Clone the repo
-git clone https://github.com/darccyy/ibex-template my-ibex-app
-cd my-ibex-app
-git remote remove origin
+# File Structure
 
-# Install some dev dependencies
-cargo install just cargo-watch basic-http-server
-
-# Build and open a local server on localhost:4000
-just serve
 ```
-
-## GitHub Pages Setup
-
-GitHub will automatically build to the `gh-pages` branch, with the `deploy.yaml` Action. The action will automatically run when the repository is initially cloned.
-
-In repository settings, navigate to the `Pages` tab, and change 'Branch' to `gh-pages`. GitHub pages will automatically update, and the website should be live soon.
-
-# File structure
-
-No Rust code is included in the website itself. It is just for compilation.
-
-- Everything is compiled to `/build` (except `/target`)
-- Source files are included in `/src`
-    - `/src` is the Rust binary source folder
-    - `/src/scss` will be compiled to css and written to `/build/css`
-    - `/src/js` can be used to `include_str!` Javascript code into templates
-- Static files (such as images or assets) are found in `/static`, and are copied directly into `/build/static`
-    - `/static` may be symlinked in development mode (for compilation speed), but never in production
-
-![Ibex logo](static/icon.png)
+/static/posts
+    /<index>        Index in order of creation date, padded to 4 digits
+        /esperanto.png
+        /english.png
+        /esperanto.svg  Unexported SVG of *text replacement* (only for recent entries)
+        /title      Post title/caption
+                        eg. Garfildo ŝatas lazanjon
+        /date       Date of original comic YYYY-MM-DD
+                        eg. 2012-10-01
+        /errata     If any errors exist in the translation (optional)
+                        eg. lasagno >> lazanjo
+                            garfish >> garfield
+        /props      If any special properties (optional)
+                        possible values (separated by linebreak):
+                            good, nogarfield, notext, earsback
+```
 
