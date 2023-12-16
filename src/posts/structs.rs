@@ -24,7 +24,7 @@ impl<'a, T> IntoIterator for &'a List<T> {
         self.items
             .iter()
             .enumerate()
-            .map(|(index, _)| ItemRef { list: &self, index })
+            .map(|(index, _)| ItemRef { list: self, index })
             .collect::<Vec<_>>()
             .into_iter()
     }
