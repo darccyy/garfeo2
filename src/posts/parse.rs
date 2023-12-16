@@ -5,7 +5,7 @@ use std::{
     path::Path,
 };
 
-use super::{Errata, Index, Post, PostList, Transcript};
+use super::{Errata, Index, Post, PostList, Props, Special, Transcript};
 
 pub fn parse_posts() -> Result<PostList> {
     let dir_posts = Path::new("static/posts");
@@ -88,12 +88,28 @@ fn parse_post(
         None
     };
 
+    let path = folder_path.join(Path::new("props"));
+    let props = if path.exists() {
+        let file = fs::read_to_string(&path)?;
+        Props::try_from(file).with_context(|| "Failed to parse props file")?
+    } else {
+        Props::default()
+    };
+
+    let path = folder_path.join(Path::new("special"));
+    let special = if path.exists() {
+        let file = fs::read_to_string(&path)?;
+        Some(Special::try_from(file).with_context(|| "Failed to parse special file")?)
+    } else {
+        None
+    };
+
     let path = folder_path.join(Path::new("errata"));
     let errata = if path.exists() {
         let file = fs::read_to_string(&path)?;
-        Some(Errata::try_from(file).with_context(|| "Failed to parse errata file")?)
+        Errata::try_from(file).with_context(|| "Failed to parse errata file")?
     } else {
-        None
+        Errata::default()
     };
 
     let image_path = folder_path.join(Path::new("esperanto.png"));
@@ -116,6 +132,8 @@ fn parse_post(
         date,
         is_sunday,
         transcript,
+        props,
+        special,
         errata,
         version,
         is_old,
@@ -173,6 +191,40 @@ fn is_valid_date(date: &str) -> bool {
         && year.parse::<u32>().is_ok()
         && month.parse::<u32>().is_ok()
         && day.parse::<u32>().is_ok()
+}
+
+impl TryFrom<String> for Props {
+    type Error = anyhow::Error;
+    fn try_from(file: String) -> Result<Self> {
+        if file.trim().is_empty() {
+            bail!("Empty props file");
+        }
+
+        let mut props = Self::default();
+        for line in file.lines() {
+            match line.trim() {
+                "good" => props.good = true,
+                "nogarfield" => props.nogarfield = true,
+                "notext" => props.notext = true,
+                "earsback" => props.earsback = true,
+                "" => continue,
+                prop => bail!("Unknown property '{prop}'"),
+            }
+        }
+
+        Ok(props)
+    }
+}
+
+impl TryFrom<String> for Special {
+    type Error = anyhow::Error;
+    fn try_from(file: String) -> Result<Self> {
+        Ok(match file.trim() {
+            "kristnasko" => Self::Christmas,
+            "haloveno" => Self::Halloween,
+            file => bail!("Not a special occasion `{}`", file),
+        })
+    }
 }
 
 impl TryFrom<String> for Errata {

@@ -1,4 +1,3 @@
-use ibex::prelude::*;
 use ibex::{routes, ssg};
 
 mod posts;

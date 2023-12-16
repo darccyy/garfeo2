@@ -58,6 +58,7 @@ impl<'a, T> ItemRef<'a, T> {
     pub fn get(&self) -> &T {
         self.list.items.get(self.index).expect("invalid reference")
     }
+
     pub fn prev(&self) -> Option<&T> {
         let index = self.index.checked_sub(1)?;
         self.list.items.get(index)
@@ -66,6 +67,23 @@ impl<'a, T> ItemRef<'a, T> {
         let index = self.index + 1;
         self.list.items.get(index)
     }
+
+    pub fn prev_ref(&self) -> Option<ItemRef<'a, T>> {
+        let index = self.index.checked_sub(1)?;
+        Some(ItemRef {
+            index,
+            list: self.list,
+        })
+    }
+    pub fn next_ref(&self) -> Option<ItemRef<'a, T>> {
+        let index = self.index + 1;
+        self.list.items.get(index)?;
+        Some(ItemRef {
+            index,
+            list: self.list,
+        })
+    }
+
     pub fn neighbors(&self) -> Neighbors<T> {
         let item = self.get();
         let prev = self.prev();

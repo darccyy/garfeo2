@@ -1,6 +1,6 @@
 mod parse;
 mod structs;
-mod transcript;
+pub mod transcript;
 
 use serde::Serialize;
 
@@ -19,7 +19,9 @@ pub struct Post {
     pub date: String,
     pub is_sunday: bool,
     pub transcript: Option<Transcript>,
-    pub errata: Option<Errata>,
+    pub props: Props,
+    pub special: Option<Special>,
+    pub errata: Errata,
     pub version: u32,
     pub is_old: bool,
     pub image_bytes: u64,
@@ -28,7 +30,21 @@ pub struct Post {
 #[derive(Clone, Copy, Debug, Serialize)]
 pub struct Index(usize);
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Default, Serialize)]
+pub struct Props {
+    pub nogarfield: bool,
+    pub notext: bool,
+    pub good: bool,
+    pub earsback: bool,
+}
+
+#[derive(Clone, Copy, Debug, Serialize)]
+pub enum Special {
+    Christmas,
+    Halloween,
+}
+
+#[derive(Debug, Default, Serialize)]
 pub struct Errata {
     pub items: Vec<(String, String)>,
 }
