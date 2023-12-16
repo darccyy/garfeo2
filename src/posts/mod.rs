@@ -2,8 +2,6 @@ mod parse;
 mod structs;
 pub mod transcript;
 
-use serde::Serialize;
-
 use self::transcript::Transcript;
 pub use parse::parse_posts;
 
@@ -12,7 +10,7 @@ pub type PostRef<'a> = structs::ItemRef<'a, Post>;
 
 pub use structs::{ListEnds, Neighbors};
 
-#[derive(Debug, Serialize)]
+#[derive(Debug)]
 pub struct Post {
     pub index: Index,
     pub title: String,
@@ -27,10 +25,10 @@ pub struct Post {
     pub image_bytes: u64,
 }
 
-#[derive(Clone, Copy, Debug, Serialize)]
+#[derive(Clone, Copy, Debug)]
 pub struct Index(usize);
 
-#[derive(Debug, Default, Serialize)]
+#[derive(Debug, Default)]
 pub struct Props {
     pub nogarfield: bool,
     pub notext: bool,
@@ -38,13 +36,13 @@ pub struct Props {
     pub earsback: bool,
 }
 
-#[derive(Clone, Copy, Debug, Serialize)]
+#[derive(Clone, Copy, Debug)]
 pub enum Special {
     Christmas,
     Halloween,
 }
 
-#[derive(Debug, Default, Serialize)]
+#[derive(Debug, Default)]
 pub struct Errata {
     pub items: Vec<(String, String)>,
 }

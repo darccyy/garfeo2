@@ -1,5 +1,4 @@
 use anyhow::{bail, Result};
-use serde::Serialize;
 
 #[derive(Debug)]
 pub enum Transcript {
@@ -12,7 +11,7 @@ pub struct Panel {
     pub lines: Vec<Line>,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug)]
 pub struct Line {
     pub speaker: Speaker,
     pub text: String,
@@ -23,35 +22,6 @@ pub enum Speaker {
     Sound,
     Text,
     Character { name: String, uncommon: bool },
-}
-
-impl Serialize for Transcript {
-    fn serialize<S>(&self, serializer: S) -> std::prelude::v1::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        self.panels().serialize(serializer)
-    }
-}
-impl Serialize for Panel {
-    fn serialize<S>(&self, serializer: S) -> std::prelude::v1::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        self.lines.serialize(serializer)
-    }
-}
-impl Serialize for Speaker {
-    fn serialize<S>(&self, serializer: S) -> std::prelude::v1::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        match self {
-            Self::Sound => "[sono]".serialize(serializer),
-            Self::Text => "[teksto]".serialize(serializer),
-            Self::Character { name, .. } => name.to_uppercase().serialize(serializer),
-        }
-    }
 }
 
 impl Transcript {

@@ -2,6 +2,7 @@ use ibex::{routes, ssg};
 
 mod posts;
 mod routes;
+mod rss;
 mod views;
 
 const URL_ROOT: &str = "/garfeo2/";
@@ -10,6 +11,7 @@ fn main() {
     let posts = posts::parse_posts().expect("Failed to parse posts");
 
     let routes = routes! [
+        // Normal pages
         (/)
             => routes::at_index(&posts),
         (/"plej-bonaj")
@@ -20,15 +22,28 @@ fn main() {
             => routes::at_instructions(&posts),
         (/"listo")
             => routes::at_list(&posts),
+        (/404)
+            => routes::at_404(&posts),
 
+        // Posts (HTML)
         (/[post.get().index()])
             for post in posts
             => routes::at_post(post),
         (/"lasta")
-            => routes::at_post(posts.last_ref()),
+            => routes::at_post(posts.first_ref()),
 
-        (/404)
-            => routes::at_404(&posts),
+        // Posts (JSON)
+        (/"index.json") | (/"posts.json")
+            => ssg::raw(routes::json_index(&posts)),
+        (/[post.get().index()]".json")
+            for post in posts
+            => ssg::raw(routes::json_post(post)),
+        (/"latest.json")
+            => ssg::raw(routes::json_post(posts.first_ref())),
+
+        // RSS file
+        (/"rss.xml")
+            => ssg::raw(rss::generate_rss(posts)),
     ];
 
     ssg::quick_build(routes).expect("Failed to build");
